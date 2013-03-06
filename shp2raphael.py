@@ -37,6 +37,9 @@ def main():
 	parser.add_option("-e", "--encoding", action="store", type="string", dest="encoding", default="latin-1",
 		help="encoding of your attributes")
 
+	parser.add_option("-p", "--precision", action="store", type="int", dest="precision", default="3",
+		help="significant points after the decimal point")
+
 	(options, args) = parser.parse_args()
 
 	if not options.shpfile:
@@ -94,6 +97,7 @@ def main():
 		idx += 1
 
 	jsonlist = []
+	fmt = "%."+str(options.precision)+"f,%."+str(options.precision)+"f "
 	for shapeidx, shape in enumerate(shapes):
 		msg("accessing shape %u" % (shapeidx))
 		jsonshp = {}
@@ -124,7 +128,7 @@ def main():
 					           float(point[0] - bbox[0]) / float(bboxsz[0]) * float(imgsz[0]),
 					imgsz[1] - float(point[1] - bbox[1]) / float(bboxsz[1]) * float(imgsz[1]),
 				)
-				path += ("%f,%f " % pt)
+				path += fmt % pt
 
 			jsonshp["paths"].append(path)
 
